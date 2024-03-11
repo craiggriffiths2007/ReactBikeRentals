@@ -1,0 +1,56 @@
+﻿@model UsersViewModel
+@{
+    ViewData["Title"] = "Manage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>User</h2>
+<hr />
+<dl class="row">
+    <dt class="col-sm-2">
+        First Name
+    </dt>
+    <dd class="col-sm-10">
+        @Model.User.FirstName
+    </dd>
+    <dt class="col-sm-2">
+        Last Name
+    </dt>
+    <dd class="col-sm-10">
+        @Model.User.LastName
+    </dd>
+    <dt class="col-sm-2">
+        Email
+    </dt>
+    <dd class="col-sm-10">
+        @Model.User.Email
+    </dd>
+    <dt class="col-sm-2">
+        Roles
+    </dt>
+</dl>
+<form method="post">
+    <div class="col-md-4">
+
+        <div class="card-body">
+            @for (int i = 0; i < Model.UserRolesViewModels.Count; i++)
+            {
+                <div class="form-check m-1">
+                    <input type="hidden" asp-for="@Model.UserRolesViewModels[i].RoleId" />
+                    <input type="hidden" asp-for="@Model.UserRolesViewModels[i].RoleName" />
+                    <input asp-for="@Model.UserRolesViewModels[i].Selected" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.UserRolesViewModels[i].Selected">
+                        @Model.UserRolesViewModels[i].RoleName
+                    </label>
+                </div>
+            }
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+        
+        <input type="submit" value="Update" class="btn btn-primary"
+                style="width:auto" />
+        
+    </div>
+</form>
+<a asp-action="Delete" asp-route-id="@Model.User.Id">Delete</a>@(" | ")
+<a asp-action="Index">Back to List</a>

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ReactBikes.Models.Rental>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (User.IsInRole("Manager"))
+{
+    <h1>Rentals</h1>
+}
+else
+{
+    <h1>My Rentals</h1>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Bike)
+            </th>
+            @if (User.IsInRole("Manager"))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.DateFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTo)
+            </th>
+            <th>
+                Retured
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rating)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) 
+    {
+        <tr class="tr_style" onclick="location.href = '@Url.Action(User.IsInRole("Manager")?"Edit":"Details", "Rentals", new { id = item.RentalId })'">
+            <td>
+                @Html.DisplayFor(modelItem => item.Bike.ModelName)
+            </td>
+            @if (User.IsInRole("Manager"))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FirstName)@(" ")@Html.DisplayFor(modelItem => item.User.LastName)
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.DateFrom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTo)
+            </td>
+            <td>
+                    @if (item.Returned == true)
+                    {
+                        @Html.DisplayFor(modelItem => item.DateReturned)
+                    }
+                    else
+                    {
+                        <strong><span style="color:red">No</span></strong>
+                    }
+                </td>
+            <td>
+                @if (item.Returned == true)
+                {
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        if (item.Rating <= i)
+                        {
+                            <img src="/img/StarFade.jpg" width="20" />
+                        }
+                        else
+                        {
+                            <img src="/img/StarGlow.jpg" width="20" />
+                        }
+                    }
+                }
+                else
+                {
+                    @("n/a")
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

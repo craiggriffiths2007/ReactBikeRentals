@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ReactBikes.Models.Bike>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Bikes</h1>
+    @if (User.IsInRole("Manager"))
+    {
+        <p>
+            <a asp-action="Create">Add Bike</a>
+        </p>
+    }
+
+<form asp-controller="Bikes" asp-action="Index">
+    <p>
+        Model: <input type="text" name="modelSearchString" />
+        Colour: <input type="text" name="colourSearchString" />
+        Location: <input type="text" name="locationSearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ModelName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Colour)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocationPostcode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Available)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr class="tr_style" onclick="location.href = '@Url.Action(User.IsInRole("Manager")?"Edit":"Details", "Bikes", new { id = item.BikeId })'">
+        
+            <td>
+                @Html.DisplayFor(modelItem => item.ModelName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Colour)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LocationPostcode)
+            </td>
+            <td>
+               @for(int i=0;i<5;i++)
+               {
+                    if (item.Rating<=i)
+                    {
+                        <img src="/img/StarFade.jpg" width="20" />
+                    }
+                    else
+                    {
+                        <img src="/img/StarGlow.jpg" width="20" />
+                    }
+               }
+            </td>
+            <td>
+                <!--@Html.DisplayFor(modelItem => item.Available)-->
+                @if (item.Available == true)
+                {
+                    <strong><span style="color:green;">Available</span></strong>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

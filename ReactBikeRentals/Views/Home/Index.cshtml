@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+
+    <img src="/img/React Bikes.jpg" height="150" />
+    <br />
+    <br />
+    <h1 class="display-4">React Bikes</h1>
+    
+    <br />
+    @if (!User.IsInRole("User") && !User.IsInRole("Manager"))
+    {
+        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <br/>
+        @("or")
+        <br />
+        <br />
+        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+     }
+</div>
