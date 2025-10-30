@@ -11,6 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ReactBikesContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ReactBikesContext") ?? throw new InvalidOperationException("Connection string 'ReactBikesContext' not found.")));
 
+//builder.Services.AddDefaultIdentity<ReactBikesUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ReactBikesContext>();
+
 builder.Services.AddIdentity<ReactBikesUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;

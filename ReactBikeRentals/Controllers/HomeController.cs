@@ -21,7 +21,10 @@ namespace ReactBikes.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("index","Bikes");
+            else
+                return View();
         }
 
         public IActionResult Privacy()
