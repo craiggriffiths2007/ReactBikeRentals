@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ReactBikes.Data;
-using System.Net.Mail;
 
 namespace ReactBikes.Areas.Identity.Pages.Account
 {
@@ -23,12 +22,10 @@ namespace ReactBikes.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ReactBikesUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly UserManager<ReactBikesUser> _userManager;
 
-        public LoginModel(SignInManager<ReactBikesUser> signInManager, UserManager<ReactBikesUser> userManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ReactBikesUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
-            _userManager = userManager;
             _logger = logger;
         }
 
@@ -64,27 +61,28 @@ namespace ReactBikes.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
             [Required]
-            [Display(Name = "Email / Username")]
+            [EmailAddress]
             public string Email { get; set; }
+
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
+
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
-        }
-
-        public bool IsValidEmail(string emailaddress)
-        {
-            try
-            {
-                MailAddress m = new MailAddress(emailaddress);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -106,21 +104,12 @@ namespace ReactBikes.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/Bikes");
+            returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
-                var userName = Input.Email;
-                if (IsValidEmail(Input.Email))
-                {
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-                    if (user != null)
-                    {
-                        userName = user.UserName;
-                    }
-                }
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
